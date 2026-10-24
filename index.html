@@ -22,7 +22,7 @@
   --ink:#0F0F0F;
   --carbon:#131313;
   --carbon-2:#1B1B1B;
-  --mute:#6F6F6C;
+  --mute:#5C5C59;
   --mute-d:#8E8E8A;
   --rule:rgba(15,15,15,.16);
   --rule-d:rgba(236,236,234,.15);
@@ -58,13 +58,16 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 .glyph{display:block;fill:currentColor}
 
 /* ---------- header ---------- */
-.top{position:fixed;inset:0 0 auto;z-index:60;color:#fff;mix-blend-mode:difference;padding-top:env(safe-area-inset-top,0px)}
+.top{position:fixed;inset:0 0 auto;z-index:60;color:#fff;mix-blend-mode:difference;padding-top:env(safe-area-inset-top,0px);transition:transform .35s var(--ease-out)}
+.top.hide{transform:translateY(-110%)}
+.field,.t-in,.quote{scroll-margin-top:96px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:18px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-.02em;font-size:17px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-.02em;font-size:17px;padding-block:9px}
 .brand svg{width:20px;height:20px}
 .nav{display:flex;gap:28px}
-.nav a{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;position:relative;padding-block:6px}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s var(--ease-out)}
+.nav a{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;position:relative;padding-block:14px}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:10px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s var(--ease-out)}
 @media (hover:hover){.nav a:hover::after{transform:scaleX(1);transform-origin:left}}
 .top-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em}
 .menu-btn{display:none;background:none;border:1px solid currentColor;padding:8px 12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
@@ -87,7 +90,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 .btn.ghost{background:transparent;color:inherit;border-color:currentColor}
 @media (hover:hover){.btn.ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
   .on-dark .btn.ghost:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}}
-.link{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:3px;display:inline-flex;gap:10px;align-items:center}
+.link{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor;padding-top:14px;padding-bottom:6px;display:inline-flex;gap:10px;align-items:center}
 
 /* ---------- hero ---------- */
 .hero{position:relative;overflow:hidden;background:radial-gradient(120% 95% at 74% 22%,#FBFBF9 0%,#E7E7E4 46%,#CDCDCA 100%)}
@@ -221,7 +224,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 .proc .n{font-family:var(--f-display);font-weight:300;font-size:64px;letter-spacing:-.06em;line-height:.9}
 .proc h3{margin:0;font-weight:600;font-size:17px;letter-spacing:-.01em}
 .proc p{margin:0;font-size:14px;color:var(--mute);line-height:1.5}
-.proc .chip{margin-top:auto;align-self:flex-start;border:1px solid var(--ink);padding:5px 8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.proc .chip{margin-top:auto;align-self:flex-start;border:1px solid var(--ink);padding:5px 8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 ol.proc{margin:0;padding:0}
 
 /* ---------- status ---------- */
@@ -235,7 +238,7 @@ ol.proc{margin:0;padding:0}
 .t-in:focus-within{outline:2px solid var(--signal);outline-offset:3px}
 .t-err{color:#FF8A73;font-size:14px;margin:0;min-height:1.5em}
 .demo{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
-.demo button{background:none;border:1px dashed var(--mute-d);padding:6px 10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;cursor:pointer}
+.demo button{background:none;border:1px dashed var(--mute-d);padding:6px 10px;min-height:40px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;cursor:pointer}
 @media (hover:hover){.demo button:hover{border-style:solid;border-color:var(--paper)}}
 .t-card{border:1px solid var(--rule-d);background:var(--carbon-2)}
 .t-top{display:grid;grid-template-columns:1fr auto;gap:12px;padding:22px 24px;border-bottom:1px solid var(--rule-d)}
@@ -243,7 +246,7 @@ ol.proc{margin:0;padding:0}
 .t-top p{margin:4px 0 0;color:#BDBDB9;font-size:15px}
 .t-id{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-align:right}
 .t-steps{list-style:none;margin:0;padding:8px 24px}
-.t-steps li{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule-d);color:#77777A;font-size:15px}
+.t-steps li{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule-d);color:#8E8E91;font-size:15px}
 .t-steps li:last-child{border-bottom:0}
 .t-steps .mk{width:12px;height:12px;border:1px solid currentColor}
 .t-steps li.done{color:#CFCFCB}
@@ -267,10 +270,11 @@ ol.proc{margin:0;padding:0}
 /* ---------- contact ---------- */
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,96px);align-items:start}
 .c-list{margin:0;border-top:1px solid var(--ink)}
-.c-list > div{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule)}
+.c-list > div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
 .c-list dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.c-list dd{margin:0;font-size:17px;letter-spacing:-.01em;user-select:all;min-width:0;overflow-wrap:anywhere}
-.copy{background:none;border:1px solid var(--rule);padding:5px 9px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .18s ease,transform .16s var(--ease-out)}
+.c-list dd{margin:0;font-size:17px;letter-spacing:-.01em;min-width:0;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.c-list dd span{user-select:all;overflow-wrap:anywhere;min-width:0}
+.copy{background:none;border:1px solid var(--rule);padding:5px 10px;min-height:40px;flex:none;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .18s ease,transform .16s var(--ease-out)}
 .copy:active{transform:scale(.96)}
 @media (hover:hover){.copy:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}}
 .hours{width:100%;border-collapse:collapse;margin-top:28px;font-variant-numeric:tabular-nums}
@@ -303,9 +307,11 @@ ol.proc{margin:0;padding:0}
 .foot{background:var(--carbon);color:var(--paper);overflow:hidden;padding-top:clamp(64px,8vw,120px)}
 .foot-top{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding-bottom:clamp(48px,6vw,96px)}
 .foot-top p{margin:8px 0 0;font-size:15px;color:#CFCFCB}
-.foot-top a{text-decoration:none}
+.foot .lbl{color:var(--mute-d)}
+.foot-top a{text-decoration:none;display:inline-block;padding-block:6px}
+.foot-top p:has(a){line-height:1.2}
 @media (hover:hover){.foot-top a:hover{text-decoration:underline}}
-.foot .wordmark{color:var(--paper);margin-bottom:-.06em}
+.foot .wordmark{color:var(--paper);margin-bottom:clamp(14px,2vw,28px)}
 .foot-bot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid var(--rule-d);padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));color:var(--mute-d)}
 
 /* ---------- responsive ---------- */
@@ -339,9 +345,8 @@ ol.proc{margin:0;padding:0}
   .sec-head .side{justify-self:start}
   .svc-row{grid-template-columns:44px minmax(0,1fr) 40px;gap:14px;padding:18px 0}
   .svc-row svg{width:36px;height:36px}
-  .svc-row .t,.svc-row .p{grid-column:2;margin-top:-6px}
-  .svc-row .t{grid-row:2}
-  .svc-row .p{grid-row:3;margin-top:-10px}
+  .svc-row .t,.svc-row .p{grid-column:2;grid-row:2;margin-top:-6px}
+  .svc-row .p{justify-self:end}
   .svc-row .go{grid-column:3;grid-row:1;width:36px;height:36px}
   .calc,.track-grid,.contact{grid-template-columns:minmax(0,1fr)}
   .hero-meta .mono{display:none}
@@ -355,8 +360,7 @@ ol.proc{margin:0;padding:0}
   .proc .n{grid-row:1 / span 3;font-size:48px}
   .proc .chip{grid-column:2;margin-top:6px}
   .f-grid{grid-template-columns:1fr}
-  .c-list > div{grid-template-columns:1fr auto;gap:4px 12px}
-  .c-list dt{grid-column:1 / -1}
+  .c-list > div{grid-template-columns:1fr;gap:4px}
   .foot-top{grid-template-columns:1fr 1fr}
 }
 @media (prefers-reduced-motion:reduce){
@@ -442,7 +446,8 @@ ol.proc{margin:0;padding:0}
 </section>
 
 <!-- BRIEF -->
-<section class="brief" aria-label="Коротко о сервисе">
+<section class="brief" aria-labelledby="briefTitle">
+  <h2 class="sr-only" id="briefTitle">Коротко о сервисе</h2>
   <div class="brief-grid">
     <div class="brief-stage" id="briefStage" aria-hidden="true">
       <span class="lbl">[ Разбор / ноутбук 14″ ]</span>
@@ -590,10 +595,10 @@ ol.proc{margin:0;padding:0}
     <div class="contact">
       <div>
         <dl class="c-list">
-          <div><dt>Адрес</dt><dd>Musterstraße 14, 28199 Bremen</dd><button class="copy" data-copy="Musterstraße 14, 28199 Bremen">Копировать</button></div>
-          <div><dt>Телефон</dt><dd>+49 421 698 314 27</dd><button class="copy" data-copy="+49 421 698 314 27">Копировать</button></div>
-          <div><dt>WhatsApp</dt><dd>+49 176 438 209 61</dd><button class="copy" data-copy="+49 176 438 209 61">Копировать</button></div>
-          <div><dt>E-mail</dt><dd>service@hardfix.de</dd><button class="copy" data-copy="service@hardfix.de">Копировать</button></div>
+          <div><dt>Адрес</dt><dd><span>Musterstraße 14, 28199 Bremen</span><button class="copy" data-copy="Musterstraße 14, 28199 Bremen">Копировать</button></dd></div>
+          <div><dt>Телефон</dt><dd><span>+49 421 698 314 27</span><button class="copy" data-copy="+49 421 698 314 27">Копировать</button></dd></div>
+          <div><dt>WhatsApp</dt><dd><span>+49 176 438 209 61</span><button class="copy" data-copy="+49 176 438 209 61">Копировать</button></dd></div>
+          <div><dt>E-mail</dt><dd><span>service@hardfix.de</span><button class="copy" data-copy="service@hardfix.de">Копировать</button></dd></div>
         </dl>
         <table class="hours" aria-label="Часы работы">
           <tbody id="hoursBody"></tbody>
@@ -884,7 +889,7 @@ renderHours(); setInterval(renderHours, 60000);
 $$(".copy").forEach(b => b.addEventListener("click", () => {
   const txt = b.dataset.copy, label = b.textContent;
   const done = ok => { b.textContent = ok ? "Скопировано" : "Выделено"; setTimeout(() => b.textContent = label, 1600); };
-  const fallback = () => { const dd = b.previousElementSibling; const r = document.createRange(); r.selectNodeContents(dd); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done(false); };
+  const fallback = () => { const dd = b.parentElement.querySelector("span"); const r = document.createRange(); r.selectNodeContents(dd); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done(false); };
   try { navigator.clipboard.writeText(txt).then(() => done(true), fallback); } catch(e){ fallback(); }
 }));
 
@@ -921,8 +926,13 @@ $$("#bookForm input, #bookForm textarea, #bookForm select").forEach(el => el.add
   const fld = el.closest(".field"); if (fld.classList.contains("bad")){ fld.classList.remove("bad"); fld.querySelector(".err").textContent = ""; }
 }));
 
-/* ================= MENU ================= */
+/* ================= HEADER HIDE ON SCROLL ================= */
 const sheet = $("#sheet");
+const topBar = $(".top"); let lastY = scrollY;
+addEventListener("scroll", () => { const y = scrollY; if (Math.abs(y - lastY) < 6) return; topBar.classList.toggle("hide", y > lastY && y > 240 && !sheet.classList.contains("open")); lastY = y; }, { passive:true });
+topBar.addEventListener("focusin", () => topBar.classList.remove("hide"));
+
+/* ================= MENU ================= */
 const setMenu = open => { sheet.classList.toggle("open", open); sheet.setAttribute("aria-hidden", !open); $("#menuOpen").setAttribute("aria-expanded", open); document.body.style.overflow = open ? "hidden" : ""; };
 $("#menuOpen").onclick = () => setMenu(true);
 $("#menuClose").onclick = () => setMenu(false);
