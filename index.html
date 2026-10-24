@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#131313">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill-rule='evenodd' d='M22 0H78L100 22V78L78 100H22L0 78V22ZM41 17H59V41H83V59H59V83H41V59H17V41H41Z'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>HARDFIX</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="HARDFIX — сервисный центр: ремонт смартфонов, ноутбуков, компьютеров, планшетов и консолей. Бесплатная диагностика, гарантия 6 месяцев.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: K-tech brief. Grey studio-gradient blocks collide with carbon blocks on a 12-col grid.
+   90° corners only, mono telemetry labels, one wordmark at architectural scale, live 3D teardown renders as imagery. */
+:root{
+  --paper:#ECECEA;
+  --paper-hi:#F8F8F6;
+  --paper-lo:#D3D3D0;
+  --ink:#0F0F0F;
+  --carbon:#131313;
+  --carbon-2:#1B1B1B;
+  --mute:#6F6F6C;
+  --mute-d:#8E8E8A;
+  --rule:rgba(15,15,15,.16);
+  --rule-d:rgba(236,236,234,.15);
+  --signal:#E5462B;
+  --ok:#3FBF6A;
+
+  --f-display:"Onest","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Onest","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+
+  --max:1440px;
+  --gx:clamp(16px,4vw,64px);
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-io:cubic-bezier(0.77,0,0.175,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+/* grain */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+.wrap{max-width:var(--max);margin-inline:auto;padding-left:max(var(--gx),env(safe-area-inset-left,0px));padding-right:max(var(--gx),env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;line-height:1.45}
+.lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.on-dark .lbl{color:var(--mute-d)}
+.glyph{display:block;fill:currentColor}
+
+/* ---------- header ---------- */
+.top{position:fixed;inset:0 0 auto;z-index:60;color:#fff;mix-blend-mode:difference;padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-.02em;font-size:17px}
+.brand svg{width:20px;height:20px}
+.nav{display:flex;gap:28px}
+.nav a{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;position:relative;padding-block:6px}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s var(--ease-out)}
+@media (hover:hover){.nav a:hover::after{transform:scaleX(1);transform-origin:left}}
+.top-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em}
+.menu-btn{display:none;background:none;border:1px solid currentColor;padding:8px 12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+
+.sheet{position:fixed;inset:0;z-index:70;background:var(--carbon);color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  transform:translateY(-100%);transition:transform .45s var(--ease-io);visibility:hidden}
+.sheet.open{transform:none;visibility:visible}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.sheet nav{display:flex;flex-direction:column}
+.sheet nav a{font-size:clamp(40px,12vw,72px);font-weight:500;letter-spacing:-.04em;line-height:1.05;text-decoration:none;border-top:1px solid var(--rule-d);padding-block:10px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:15px 22px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer;
+  transition:transform .16s var(--ease-out),background-color .2s ease,color .2s ease}
+.btn:active{transform:scale(.97)}
+.btn .arr{transition:transform .25s var(--ease-out)}
+@media (hover:hover){.btn:hover .arr{transform:translateX(4px)}}
+.btn.light{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+@media (hover:hover){.btn.ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .on-dark .btn.ghost:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}}
+.link{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:3px;display:inline-flex;gap:10px;align-items:center}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;background:radial-gradient(120% 95% at 74% 22%,#FBFBF9 0%,#E7E7E4 46%,#CDCDCA 100%)}
+.hero-grid{position:relative;min-height:clamp(680px,96vh,980px);display:flex;flex-direction:column;justify-content:space-between;padding-top:calc(96px + env(safe-area-inset-top,0px));padding-bottom:40px}
+.hero-meta{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;position:relative;z-index:3}
+.hero-meta p{margin:0;font-size:15px;line-height:1.35;letter-spacing:-.005em}
+.hero-meta p b{font-weight:500;text-transform:uppercase;letter-spacing:.01em}
+.hero-stage{position:absolute;z-index:2;top:40px;right:-4%;width:66%;height:84%}
+.hero-stage canvas,.brief-stage canvas{width:100%;height:100%;display:block;touch-action:pan-y}
+.hero-spec{position:absolute;left:max(var(--gx),env(safe-area-inset-left,0px));top:30%;z-index:3;width:250px;color:var(--ink)}
+.hero-spec .mono{display:grid;gap:7px}
+.hero-spec .row{display:flex;gap:8px;align-items:baseline}
+.hero-spec .row span:first-child{flex:none}
+.hero-spec .row i{flex:1;border-bottom:1px dotted rgba(15,15,15,.35);transform:translateY(-3px)}
+.hero-spec .row span:last-child{flex:none;font-weight:500}
+.hero-spec .head{margin-bottom:6px;color:var(--mute)}
+
+.wordmark{position:relative;z-index:1;margin:0;display:flex;align-items:flex-end;gap:.06em;font-family:var(--f-display);font-weight:500;letter-spacing:-.065em;line-height:.76;
+  font-size:min(calc((100vw - 2 * var(--gx)) / 4.85),16.5rem);margin-left:-.02em;user-select:none}
+.wordmark .wm-g{width:.74em;height:.74em;flex:none;margin-right:.08em;margin-bottom:.005em}
+.wordmark .wm-t{display:block;overflow:hidden;padding-bottom:.02em}
+.wordmark .wm-t span{display:inline-block;animation:rise 1s var(--ease-out) both}
+.wordmark .wm-g{animation:spin-in 1.2s var(--ease-out) both}
+@keyframes rise{from{transform:translateY(60%)}to{transform:none}}
+@keyframes spin-in{from{transform:rotate(-90deg) scale(.9)}to{transform:none}}
+
+.hero-foot{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;gap:32px;align-items:end;margin-top:28px;border-top:1px solid var(--rule);padding-top:22px}
+.lede{margin:0;font-size:clamp(17px,1.35vw,20px);line-height:1.4;max-width:34ch;letter-spacing:-.01em}
+.cta{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.open-state{display:grid;gap:4px;text-align:right}
+.dot{display:inline-block;width:7px;height:7px;background:var(--ok);margin-right:8px;transform:translateY(-1px);animation:pulse 2.2s ease-in-out infinite}
+.dot.closed{background:var(--signal);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---------- brief split ---------- */
+.brief{position:relative;background:var(--carbon)}
+.brief-grid{display:grid;grid-template-columns:34fr 28fr 38fr;max-width:none}
+.brief-stage{grid-column:1;grid-row:1 / span 4;background:var(--paper);position:relative;min-height:560px}
+.brief-stage .lbl{position:absolute;left:max(var(--gx),env(safe-area-inset-left,0px));top:32px;z-index:2}
+.b-key{grid-column:2;background:var(--paper);padding:44px 24px 44px 8px;display:flex;align-items:flex-start}
+.b-key h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase}
+.b-val{grid-column:3;background:var(--carbon);color:var(--paper);padding:44px max(var(--gx),env(safe-area-inset-right,0px)) 44px clamp(24px,5vw,96px);border-bottom:1px solid var(--rule-d)}
+.b-val p{margin:0;font-size:15px;line-height:1.55;max-width:40ch;color:#CFCFCB}
+.b-val p strong{color:var(--paper);font-weight:500}
+.b-val:last-of-type{border-bottom:0}
+.blend{position:relative;background:linear-gradient(90deg,var(--paper) 0 62%,var(--carbon) 62% 100%);overflow:hidden}
+.blend h2{margin:0;color:#fff;mix-blend-mode:difference;font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:-.045em;line-height:.8;
+  font-size:min(calc((100vw - 2 * var(--gx)) / 4.6),17rem);padding-top:.12em;padding-bottom:.06em;white-space:nowrap}
+.blend .wrap{position:relative}
+.tools{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid #fff;mix-blend-mode:difference;color:#fff;margin-top:24px}
+.tools div{padding:16px 16px 40px 0;border-right:1px solid rgba(255,255,255,.35)}
+.tools div:last-child{border-right:0}
+.tools b{display:block;font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.tools span{display:block;font-size:13px;margin-top:6px;opacity:.8}
+
+/* ---------- section heads ---------- */
+.sec{padding-block:clamp(72px,10vw,140px)}
+.on-dark{background:var(--carbon);color:var(--paper)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.sec-head h2{margin:0;font-family:var(--f-display);font-weight:500;font-size:clamp(44px,7vw,112px);letter-spacing:-.055em;line-height:.88;text-wrap:balance}
+.sec-head .side{display:grid;gap:14px;justify-items:start;max-width:44ch;justify-self:end}
+.sec-head .side p{margin:0;color:var(--mute);font-size:15px}
+.on-dark .sec-head .side p{color:var(--mute-d)}
+
+/* ---------- services ---------- */
+.svc{border-top:1px solid var(--ink)}
+.svc-row{display:grid;grid-template-columns:72px minmax(0,1fr) 150px 130px 48px;gap:24px;align-items:center;padding:22px 12px;border-bottom:1px solid var(--rule);text-decoration:none;cursor:pointer;
+  transition:background-color .22s ease,color .22s ease;width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.svc-row svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:square}
+.svc-row h3{margin:0;font-weight:500;font-size:clamp(22px,2.3vw,32px);letter-spacing:-.035em;line-height:1.05}
+.svc-row p{margin:6px 0 0;font-size:14px;color:var(--mute);transition:color .22s ease}
+.svc-row .t,.svc-row .p{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.svc-row .p{font-weight:500}
+.svc-row .go{width:40px;height:40px;border:1px solid currentColor;display:grid;place-items:center;transition:transform .25s var(--ease-out)}
+@media (hover:hover){
+  .svc-row:hover{background:var(--ink);color:var(--paper)}
+  .svc-row:hover p{color:#A9A9A5}
+  .svc-row:hover .go{transform:rotate(-45deg)}
+}
+.svc-row:active{transform:scale(.995)}
+
+/* ---------- calculator ---------- */
+.calc{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.step{border-top:1px solid var(--rule-d);padding-block:22px 28px}
+.step-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.step-h h3{margin:0;font-size:18px;font-weight:500;letter-spacing:-.01em}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:1px solid var(--rule-d);background:transparent;padding:10px 14px;font-size:14px;cursor:pointer;transition:background-color .18s ease,color .18s ease,border-color .18s ease,transform .16s var(--ease-out)}
+.seg button:active{transform:scale(.97)}
+@media (hover:hover){.seg button:hover{border-color:var(--paper)}}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.faults{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--rule-d)}
+.faults label{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 12px 13px 0;border-bottom:1px solid var(--rule-d);cursor:pointer;font-size:15px}
+.faults label:nth-child(odd){padding-right:20px;border-right:1px solid var(--rule-d)}
+.faults label:nth-child(even){padding-left:20px}
+.faults input{position:absolute;opacity:0;pointer-events:none}
+.faults .box{width:14px;height:14px;border:1px solid var(--mute-d);flex:none;display:grid;place-items:center}
+.faults .box::after{content:"";width:6px;height:6px;background:var(--paper);transform:scale(0);transition:transform .18s var(--ease-out)}
+.faults input:checked + span + .box::after{transform:scale(1)}
+.faults input:checked + span{color:var(--paper)}
+.faults span{color:#BEBEBA;transition:color .15s ease}
+.faults input:focus-visible + span{outline:2px solid var(--signal);outline-offset:2px}
+.switch{display:flex;align-items:center;gap:14px;cursor:pointer;font-size:15px}
+.switch input{position:absolute;opacity:0}
+.switch .track{width:44px;height:24px;border:1px solid var(--mute-d);position:relative;flex:none;transition:background-color .2s ease}
+.switch .track::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--paper);transition:transform .25s var(--ease-out)}
+.switch input:checked + .track{background:var(--paper)}
+.switch input:checked + .track::after{transform:translateX(20px);background:var(--ink)}
+.switch input:focus-visible + .track{outline:2px solid var(--signal);outline-offset:2px}
+
+.quote{position:sticky;top:96px;background:var(--paper);color:var(--ink);padding:28px}
+.quote .lbl{color:var(--mute)}
+.q-what{margin:10px 0 0;font-size:15px;min-height:2.9em}
+.q-price{font-family:var(--f-display);font-weight:500;font-size:clamp(52px,6.2vw,96px);letter-spacing:-.06em;line-height:.9;margin:22px 0 4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.q-price small{font-size:.38em;letter-spacing:-.02em;font-weight:400}
+.q-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule);margin-top:20px}
+.q-grid div{padding:14px 0;border-bottom:1px solid var(--rule)}
+.q-grid div:nth-child(odd){border-right:1px solid var(--rule);padding-right:14px}
+.q-grid div:nth-child(even){padding-left:14px}
+.q-grid b{display:block;font-weight:500;font-size:17px;margin-top:4px;font-variant-numeric:tabular-nums}
+.q-note{font-size:13px;color:var(--mute);margin:16px 0 22px}
+.quote .btn{width:100%;justify-content:space-between}
+.q-price.tick{animation:tick .35s var(--ease-out)}
+@keyframes tick{from{filter:blur(3px);opacity:.5}to{filter:none;opacity:1}}
+
+/* ---------- process ---------- */
+.proc{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--ink)}
+.proc li{list-style:none;padding:20px 20px 28px 0;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:14px;min-height:300px}
+.proc li + li{padding-left:20px}
+.proc li:last-child{border-right:0}
+.proc .n{font-family:var(--f-display);font-weight:300;font-size:64px;letter-spacing:-.06em;line-height:.9}
+.proc h3{margin:0;font-weight:600;font-size:17px;letter-spacing:-.01em}
+.proc p{margin:0;font-size:14px;color:var(--mute);line-height:1.5}
+.proc .chip{margin-top:auto;align-self:flex-start;border:1px solid var(--ink);padding:5px 8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+ol.proc{margin:0;padding:0}
+
+/* ---------- status ---------- */
+.track-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(32px,6vw,96px);align-items:start}
+.t-form{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:8px}
+.t-form label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute-d)}
+.t-in{display:flex;border:1px solid var(--paper)}
+.t-in input{flex:1;min-width:0;width:100%;background:transparent;border:0;padding:16px 18px;font-family:var(--f-mono);font-size:18px;letter-spacing:.06em;text-transform:uppercase;outline:none}
+.t-in button{border:0;background:var(--paper);color:var(--ink);padding:0 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:transform .16s var(--ease-out)}
+.t-in button:active{transform:scale(.97)}
+.t-in:focus-within{outline:2px solid var(--signal);outline-offset:3px}
+.t-err{color:#FF8A73;font-size:14px;margin:0;min-height:1.5em}
+.demo{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.demo button{background:none;border:1px dashed var(--mute-d);padding:6px 10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;cursor:pointer}
+@media (hover:hover){.demo button:hover{border-style:solid;border-color:var(--paper)}}
+.t-card{border:1px solid var(--rule-d);background:var(--carbon-2)}
+.t-top{display:grid;grid-template-columns:1fr auto;gap:12px;padding:22px 24px;border-bottom:1px solid var(--rule-d)}
+.t-top h3{margin:4px 0 0;font-size:26px;font-weight:500;letter-spacing:-.03em}
+.t-top p{margin:4px 0 0;color:#BDBDB9;font-size:15px}
+.t-id{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-align:right}
+.t-steps{list-style:none;margin:0;padding:8px 24px}
+.t-steps li{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule-d);color:#77777A;font-size:15px}
+.t-steps li:last-child{border-bottom:0}
+.t-steps .mk{width:12px;height:12px;border:1px solid currentColor}
+.t-steps li.done{color:#CFCFCB}
+.t-steps li.done .mk{background:currentColor}
+.t-steps li.now{color:var(--paper)}
+.t-steps li.now .mk{background:var(--ok);border-color:var(--ok);animation:pulse 1.6s ease-in-out infinite}
+.t-steps .s{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.t-foot{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule-d)}
+.t-foot div{padding:16px 24px}
+.t-foot div + div{border-left:1px solid var(--rule-d)}
+.t-foot b{display:block;font-weight:500;margin-top:4px}
+.t-note{padding:16px 24px;border-top:1px solid var(--rule-d);font-size:14px;color:#CFCFCB;margin:0}
+
+/* ---------- marquee ---------- */
+.marq{background:var(--paper-lo);overflow:hidden;border-block:1px solid var(--ink);padding-block:18px}
+.marq-track{display:flex;width:max-content;animation:marq 38s linear infinite}
+.marq-track span{display:flex;align-items:center;gap:28px;padding-right:28px;font-size:clamp(28px,3.4vw,48px);font-weight:500;letter-spacing:-.04em;white-space:nowrap}
+.marq-track svg{width:.62em;height:.62em}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,96px);align-items:start}
+.c-list{margin:0;border-top:1px solid var(--ink)}
+.c-list > div{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule)}
+.c-list dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.c-list dd{margin:0;font-size:17px;letter-spacing:-.01em;user-select:all;min-width:0;overflow-wrap:anywhere}
+.copy{background:none;border:1px solid var(--rule);padding:5px 9px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .18s ease,transform .16s var(--ease-out)}
+.copy:active{transform:scale(.96)}
+@media (hover:hover){.copy:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}}
+.hours{width:100%;border-collapse:collapse;margin-top:28px;font-variant-numeric:tabular-nums}
+.hours td{padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.hours td:last-child{text-align:right;font-family:var(--f-mono);font-size:13px;letter-spacing:.04em}
+.hours tr.today td{font-weight:600}
+.hours tr.today td:first-child::before{content:"";display:inline-block;width:7px;height:7px;background:var(--ink);margin-right:10px;transform:translateY(-1px)}
+
+.form{background:var(--carbon);color:var(--paper);padding:clamp(22px,3vw,40px)}
+.form h3{margin:0 0 6px;font-size:28px;font-weight:500;letter-spacing:-.035em}
+.form > p{margin:0 0 26px;color:var(--mute-d);font-size:14px}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 18px}
+.field{display:grid;gap:8px;min-width:0}
+.field.full{grid-column:1 / -1}
+.field label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute-d)}
+.field input,.field select,.field textarea{width:100%;background:transparent;border:0;border-bottom:1px solid #4A4A48;padding:10px 0 12px;font-size:16px;color:var(--paper);border-radius:0;outline:none;transition:border-color .2s ease}
+.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--paper) 50%),linear-gradient(135deg,var(--paper) 50%,transparent 50%);background-position:calc(100% - 10px) 52%,calc(100% - 5px) 52%;background-size:5px 5px;background-repeat:no-repeat}
+.field select option{color:var(--ink)}
+.field textarea{resize:vertical;min-height:84px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--paper)}
+.field .err{font-size:13px;color:#FF8A73;min-height:1.2em;margin:0}
+.field.bad input,.field.bad textarea{border-color:#FF8A73}
+.f-foot{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:26px;flex-wrap:wrap}
+.f-foot small{color:var(--mute-d);font-size:12px;max-width:36ch}
+.done-panel{display:grid;gap:16px;padding-block:20px}
+.done-panel .big{font-family:var(--f-mono);font-size:clamp(28px,4vw,44px);letter-spacing:.04em}
+.done-panel p{margin:0;color:#CFCFCB;max-width:44ch}
+
+/* ---------- footer ---------- */
+.foot{background:var(--carbon);color:var(--paper);overflow:hidden;padding-top:clamp(64px,8vw,120px)}
+.foot-top{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding-bottom:clamp(48px,6vw,96px)}
+.foot-top p{margin:8px 0 0;font-size:15px;color:#CFCFCB}
+.foot-top a{text-decoration:none}
+@media (hover:hover){.foot-top a:hover{text-decoration:underline}}
+.foot .wordmark{color:var(--paper);margin-bottom:-.06em}
+.foot-bot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid var(--rule-d);padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));color:var(--mute-d)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .hero-spec{display:none}
+  .proc{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .proc li{min-height:0;border-bottom:1px solid var(--rule)}
+  .proc li:nth-child(3n){border-right:0}
+  .proc li:nth-child(3n+1){padding-left:0}
+  .svc-row{grid-template-columns:56px minmax(0,1fr) 120px 110px 44px;gap:16px}
+}
+@media (max-width:860px){
+  .nav,.top-tag{display:none}
+  .menu-btn{display:inline-block}
+  .hero-grid{min-height:0;padding-top:calc(80px + env(safe-area-inset-top,0px))}
+  .hero-stage{position:relative;top:auto;right:auto;width:calc(100% + 2 * var(--gx));margin-inline:calc(-1 * var(--gx));height:min(108vw,560px);margin-block:8px -14px}
+  .hero-foot{grid-template-columns:1fr;gap:22px}
+  .open-state{text-align:left}
+  .brief-grid{grid-template-columns:1fr}
+  .brief-stage{grid-row:auto;min-height:0;height:min(90vw,480px)}
+  .b-key,.b-val{grid-column:1}
+  .b-key{background:var(--carbon);color:var(--paper);padding:28px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+  .b-key h3{font-size:14px;color:var(--mute-d)}
+  .b-val{padding:10px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px))}
+  .blend{background:linear-gradient(90deg,var(--paper) 0 50%,var(--carbon) 50% 100%)}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tools div{padding:14px 12px 20px 0;border-bottom:1px solid rgba(255,255,255,.35)}
+  .tools div:nth-child(2n){border-right:0;padding-left:12px}
+  .tools div:last-child{grid-column:1 / -1;padding-left:0}
+  .sec-head{grid-template-columns:1fr}
+  .sec-head .side{justify-self:start}
+  .svc-row{grid-template-columns:44px minmax(0,1fr) 40px;gap:14px;padding:18px 0}
+  .svc-row svg{width:36px;height:36px}
+  .svc-row .t,.svc-row .p{grid-column:2;margin-top:-6px}
+  .svc-row .t{grid-row:2}
+  .svc-row .p{grid-row:3;margin-top:-10px}
+  .svc-row .go{grid-column:3;grid-row:1;width:36px;height:36px}
+  .calc,.track-grid,.contact{grid-template-columns:minmax(0,1fr)}
+  .hero-meta .mono{display:none}
+  .quote{position:relative;top:auto}
+  .faults{grid-template-columns:1fr}
+  .faults label:nth-child(odd){border-right:0;padding-right:0}
+  .faults label:nth-child(even){padding-left:0}
+  .proc{grid-template-columns:1fr}
+  .proc li,.proc li + li{padding:20px 0 24px;border-right:0}
+  .proc li{display:grid;grid-template-columns:72px 1fr;gap:6px 16px}
+  .proc .n{grid-row:1 / span 3;font-size:48px}
+  .proc .chip{grid-column:2;margin-top:6px}
+  .f-grid{grid-template-columns:1fr}
+  .c-list > div{grid-template-columns:1fr auto;gap:4px 12px}
+  .c-list dt{grid-column:1 / -1}
+  .foot-top{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .marq-track{animation:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g" viewBox="0 0 100 100"><path fill-rule="evenodd" d="M22 0H78L100 22V78L78 100H22L0 78V22ZM41 17H59V41H83V59H59V83H41V59H17V41H41Z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="HARDFIX, на главную"><svg class="glyph"><use href="#g"/></svg>HARDFIX</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#services">Услуги</a>
+      <a href="#price">Цены</a>
+      <a href="#process">Как работаем</a>
+      <a href="#status">Статус ремонта</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <span class="top-tag">HF/ SERVICE</span>
+    <button class="menu-btn" id="menuOpen" aria-expanded="false" aria-controls="sheet">Меню</button>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet-head">
+    <span class="brand"><svg class="glyph"><use href="#g"/></svg>HARDFIX</span>
+    <button class="menu-btn" id="menuClose" style="display:inline-block">Закрыть</button>
+  </div>
+  <nav aria-label="Меню">
+    <a href="#services">Услуги</a>
+    <a href="#price">Цены</a>
+    <a href="#process">Как работаем</a>
+    <a href="#status">Статус</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+  <p class="mono" style="color:var(--mute-d)">Пн–Пт 10–19 · Сб 11–16</p>
+</div>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-meta">
+      <p>Сервисный центр<br><b>Ремонт электроники</b><br>Bremen, Neustadt</p>
+      <p class="mono" style="text-align:right">Телефоны · Ноутбуки<br>Компьютеры · Консоли</p>
+    </div>
+
+    <div class="hero-stage" id="heroStage" aria-hidden="true"><canvas id="phone3d"></canvas></div>
+
+    <aside class="hero-spec" aria-label="Пример разбора">
+      <div class="mono">
+        <div class="head">[ Разбор / iPhone 13 ]</div>
+        <div class="row"><span>Дисплей</span><i></i><span>OLED 6.1″</span></div>
+        <div class="row"><span>АКБ</span><i></i><span>3 227 мАч</span></div>
+        <div class="row"><span>Винты</span><i></i><span>Pentalobe P2</span></div>
+        <div class="row"><span>Замена экрана</span><i></i><span>≈ 40 мин</span></div>
+      </div>
+    </aside>
+
+    <div>
+      <h1 class="wordmark" aria-label="HARDFIX — ремонт телефонов, ноутбуков и компьютеров">
+        <svg class="glyph wm-g" aria-hidden="true"><use href="#g"/></svg>
+        <span class="wm-t" aria-hidden="true"><span>HARDFIX</span></span>
+      </h1>
+      <div class="hero-foot">
+        <p class="lede">Чиним смартфоны, ноутбуки, компьютеры и консоли. Диагностика бесплатно и при вас, гарантия 6 месяцев.</p>
+        <div class="cta">
+          <a class="btn" href="#price">Рассчитать ремонт <span class="arr">→</span></a>
+          <a class="link" href="#status">Статус заказа</a>
+        </div>
+        <div class="open-state mono">
+          <span id="openNow"><span class="dot"></span>Открыто</span>
+          <span style="color:var(--mute)">Без записи · Musterstraße 14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRIEF -->
+<section class="brief" aria-label="Коротко о сервисе">
+  <div class="brief-grid">
+    <div class="brief-stage" id="briefStage" aria-hidden="true">
+      <span class="lbl">[ Разбор / ноутбук 14″ ]</span>
+      <canvas id="laptop3d"></canvas>
+    </div>
+    <div class="b-key"><h3>Диагностика :</h3></div>
+    <div class="b-val"><p><strong>Бесплатно, даже если вы откажетесь от ремонта.</strong> 15–40 минут, мастер проверяет устройство при вас и показывает, что именно сломано.</p></div>
+    <div class="b-key"><h3>Срок :</h3></div>
+    <div class="b-val"><p><strong>Большинство ремонтов телефонов делаем в день обращения.</strong> Дисплей меняем примерно за 40 минут. Если нужна деталь под заказ, называем точную дату.</p></div>
+    <div class="b-key"><h3>Гарантия :</h3></div>
+    <div class="b-val"><p><strong>6 месяцев на работу и детали.</strong> Срок и условия записаны в квитанции. Старую деталь отдаём вам.</p></div>
+    <div class="b-key"><h3>Запчасти :</h3></div>
+    <div class="b-val"><p><strong>Оригинальные или проверенные OEM.</strong> До установки показываем деталь, называем её класс и цену. Без вашего согласия ничего не меняем.</p></div>
+  </div>
+  <div class="blend">
+    <div class="wrap">
+      <h2>Ремонт</h2>
+      <div class="tools">
+        <div><b>ESD-стол</b><span>10⁶–10⁹ Ом, без статики</span></div>
+        <div><b>Микроскоп</b><span>×7–45, пайка BGA</span></div>
+        <div><b>Паяльная станция</b><span>350–420 °C, фен 0.3 мм</span></div>
+        <div><b>УЗ-ванна</b><span>40 кГц, чистка после воды</span></div>
+        <div><b>Сепаратор</b><span>OLED и стекло без замены рамки</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Что чиним</h2>
+      <div class="side">
+        <span class="lbl">[ 7 категорий ]</span>
+        <p>Цены указаны за работу вместе с деталью. Нажмите на категорию, чтобы посчитать точнее.</p>
+      </div>
+    </div>
+    <div class="svc" id="svcList"></div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="sec on-dark" id="price">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Сколько стоит</h2>
+      <div class="side">
+        <span class="lbl">[ Калькулятор ]</span>
+        <p>Три шага, и вы видите ориентир по цене и сроку. Точную сумму называем после бесплатной диагностики, и она не меняется без вашего согласия.</p>
+      </div>
+    </div>
+    <div class="calc">
+      <div>
+        <div class="step">
+          <div class="step-h"><h3>Устройство</h3><span class="lbl">Шаг 1</span></div>
+          <div class="seg" id="catSeg" role="group" aria-label="Устройство"></div>
+        </div>
+        <div class="step" id="brandStep">
+          <div class="step-h"><h3>Производитель</h3><span class="lbl">Шаг 2</span></div>
+          <div class="seg" id="brandSeg" role="group" aria-label="Производитель"></div>
+        </div>
+        <div class="step">
+          <div class="step-h"><h3>Что случилось</h3><span class="lbl" id="faultStepN">Шаг 3</span></div>
+          <div class="faults" id="faultList" role="radiogroup" aria-label="Неисправность"></div>
+        </div>
+        <div class="step">
+          <label class="switch" for="express"><input type="checkbox" id="express"><span class="track"></span><span>Срочно, вне очереди <span class="lbl" style="margin-left:6px">+25 %</span></span></label>
+        </div>
+      </div>
+      <aside class="quote" aria-live="polite">
+        <span class="lbl">[ Ориентир ]</span>
+        <p class="q-what" id="qWhat"></p>
+        <div class="q-price" id="qPrice"></div>
+        <div class="q-grid">
+          <div><span class="lbl">Срок</span><b id="qTime"></b></div>
+          <div><span class="lbl">Гарантия</span><b id="qWarr"></b></div>
+          <div><span class="lbl">Диагностика</span><b>Бесплатно</b></div>
+          <div><span class="lbl">Оплата</span><b>После ремонта</b></div>
+        </div>
+        <p class="q-note" id="qNote">Цена включает работу и деталь.</p>
+        <a class="btn" href="#contact" id="qBook">Записаться на этот ремонт <span class="arr">→</span></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Как проходит ремонт</h2>
+      <div class="side">
+        <span class="lbl">[ 6 этапов ]</span>
+        <p>Номер из квитанции открывает статус на этом сайте. Видно, на каком этапе устройство и кто из мастеров им занимается.</p>
+      </div>
+    </div>
+    <ol class="proc">
+      <li><span class="n">01</span><h3>Приём</h3><p>Описываете проблему, получаете квитанцию с номером заказа и паролем от статуса.</p><span class="chip">5 мин</span></li>
+      <li><span class="n">02</span><h3>Диагностика</h3><p>Мастер вскрывает и тестирует устройство, находит причину, а не только симптом.</p><span class="chip">15–40 мин · 0 €</span></li>
+      <li><span class="n">03</span><h3>Согласование</h3><p>Называем точную цену и срок. Без вашего «да» по телефону или SMS работу не начинаем.</p><span class="chip">Звонок / SMS</span></li>
+      <li><span class="n">04</span><h3>Ремонт</h3><p>На антистатическом столе, с оригинальными или проверенными OEM-деталями.</p><span class="chip">от 40 мин</span></li>
+      <li><span class="n">05</span><h3>Проверка</h3><p>Чек-лист из 23 пунктов: связь, камеры, датчики, заряд, звук, Face ID и Touch ID.</p><span class="chip">23 пункта</span></li>
+      <li><span class="n">06</span><h3>Выдача</h3><p>Оплачиваете после ремонта, забираете старую деталь и гарантию на 6 месяцев.</p><span class="chip">Гарантия 6 мес</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- STATUS -->
+<section class="sec on-dark" id="status">
+  <div class="wrap track-grid">
+    <div>
+      <div class="sec-head" style="grid-template-columns:1fr;margin-bottom:28px">
+        <h2>Статус ремонта</h2>
+      </div>
+      <p style="color:var(--mute-d);margin:0 0 28px;max-width:42ch">Введите номер из квитанции. Формат HF-00000, буквы можно не вводить.</p>
+      <form class="t-form" id="trackForm" novalidate>
+        <label for="orderId">Номер заказа</label>
+        <div class="t-in">
+          <input id="orderId" name="orderId" autocomplete="off" inputmode="text" placeholder="HF-24817" value="HF-24817">
+          <button type="submit">Проверить</button>
+        </div>
+        <p class="t-err" id="trackErr" role="alert"></p>
+        <div class="demo"><span class="lbl">Демо-номера:</span><button type="button" data-id="HF-24817">HF-24817</button><button type="button" data-id="HF-24833">HF-24833</button><button type="button" data-id="HF-24790">HF-24790</button></div>
+      </form>
+    </div>
+    <div class="t-card" id="trackCard" aria-live="polite"></div>
+  </div>
+</section>
+
+<div class="marq" aria-hidden="true">
+  <div class="marq-track" id="marq"></div>
+</div>
+
+<!-- CONTACT -->
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Приходите или оставьте заявку</h2>
+      <div class="side">
+        <span class="lbl">[ Контакты ]</span>
+        <p>Без записи в рабочие часы. Если оставите заявку, перезвоним в течение 15 минут и придержим мастера под ваш ремонт.</p>
+      </div>
+    </div>
+    <div class="contact">
+      <div>
+        <dl class="c-list">
+          <div><dt>Адрес</dt><dd>Musterstraße 14, 28199 Bremen</dd><button class="copy" data-copy="Musterstraße 14, 28199 Bremen">Копировать</button></div>
+          <div><dt>Телефон</dt><dd>+49 421 698 314 27</dd><button class="copy" data-copy="+49 421 698 314 27">Копировать</button></div>
+          <div><dt>WhatsApp</dt><dd>+49 176 438 209 61</dd><button class="copy" data-copy="+49 176 438 209 61">Копировать</button></div>
+          <div><dt>E-mail</dt><dd>service@hardfix.de</dd><button class="copy" data-copy="service@hardfix.de">Копировать</button></div>
+        </dl>
+        <table class="hours" aria-label="Часы работы">
+          <tbody id="hoursBody"></tbody>
+        </table>
+      </div>
+
+      <div class="form on-dark" id="formWrap">
+        <h3>Заявка на ремонт</h3>
+        <p>Ответим звонком. Оплата только после ремонта.</p>
+        <form id="bookForm" novalidate>
+          <div class="f-grid">
+            <div class="field"><label for="fName">Имя</label><input id="fName" name="name" autocomplete="given-name" placeholder="Как к вам обращаться"><p class="err"></p></div>
+            <div class="field"><label for="fPhone">Телефон</label><input id="fPhone" name="phone" type="tel" autocomplete="tel" placeholder="+49 …"><p class="err"></p></div>
+            <div class="field"><label for="fDevice">Устройство</label><select id="fDevice" name="device"></select><p class="err"></p></div>
+            <div class="field"><label for="fWhen">Когда удобно</label><select id="fWhen" name="when"><option>Сегодня</option><option>Завтра</option><option>В течение недели</option><option>Нужен курьер</option></select><p class="err"></p></div>
+            <div class="field full"><label for="fIssue">Что случилось</label><textarea id="fIssue" name="issue" placeholder="Например: упал, треснул экран, сенсор работает"></textarea><p class="err"></p></div>
+          </div>
+          <div class="f-foot">
+            <small>Нажимая кнопку, вы соглашаетесь на обработку данных для обратного звонка.</small>
+            <button class="btn light" type="submit">Отправить заявку <span class="arr">→</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div><span class="lbl">Адрес</span><p>Musterstraße 14<br>28199 Bremen</p></div>
+      <div><span class="lbl">Связь</span><p>+49 421 698 314 27<br>service@hardfix.de</p></div>
+      <div><span class="lbl">Часы</span><p>Пн–Пт 10:00–19:00<br>Сб 11:00–16:00</p></div>
+      <div><span class="lbl">Разделы</span><p><a href="#services">Услуги</a><br><a href="#price">Цены</a><br><a href="#status">Статус ремонта</a></p></div>
+    </div>
+    <div class="wordmark" aria-hidden="true"><svg class="glyph wm-g"><use href="#g"/></svg><span class="wm-t"><span>HARDFIX</span></span></div>
+  </div>
+  <div class="wrap">
+    <div class="foot-bot mono"><span>© 2026 HARDFIX Service</span><span>Impressum · Datenschutz · AGB</span><span>HF/ REV 1.0</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================= DATA ================= */
+const ICONS = {
+  phone:'<svg viewBox="0 0 48 48"><rect x="14" y="4" width="20" height="40"/><path d="M21 8h6M22 39h4"/></svg>',
+  laptop:'<svg viewBox="0 0 48 48"><rect x="9" y="10" width="30" height="20"/><path d="M4 36h40l-3-6H7z"/></svg>',
+  pc:'<svg viewBox="0 0 48 48"><rect x="4" y="8" width="26" height="18"/><path d="M13 32h8M17 26v6"/><rect x="34" y="8" width="10" height="30"/><path d="M37 13h4M37 17h4"/><circle cx="39" cy="31" r="2"/></svg>',
+  tablet:'<svg viewBox="0 0 48 48"><rect x="8" y="5" width="32" height="38"/><path d="M22 39h4"/></svg>',
+  console:'<svg viewBox="0 0 48 48"><path d="M8 16h32l4 18-7 4-6-8H17l-6 8-7-4z"/><path d="M15 20v6M12 23h6"/><circle cx="32" cy="21" r="1.5"/><circle cx="35" cy="25" r="1.5"/></svg>',
+  wear:'<svg viewBox="0 0 48 48"><rect x="14" y="13" width="20" height="22"/><path d="M17 13l2-9h10l2 9M17 35l2 9h10l2-9"/><path d="M24 20v5l3 2"/></svg>',
+  data:'<svg viewBox="0 0 48 48"><rect x="6" y="10" width="36" height="28"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="2"/><path d="M33 33l-6-6"/></svg>'
+};
+
+const T = { prem:[.45,1], mid:[.2,.78], low:[0,.55], any:[0,1] };
+const CATS = [
+  { id:"phone", name:"Смартфон", list:"Смартфоны", sub:"Дисплей, аккумулятор, разъём, камеры, после воды", time:"от 40 мин", from:"от 49 €",
+    brands:[["Apple",T.prem],["Samsung",T.mid],["Google Pixel",T.mid],["Xiaomi",T.low],["Другой",T.low]],
+    faults:[
+      ["Разбит дисплей", 89, 329, "40–60 мин", 6],
+      ["Быстро садится аккумулятор", 49, 99, "30 мин", 6],
+      ["Не заряжается, разъём", 49, 89, "45 мин", 6],
+      ["Разбито заднее стекло", 69, 169, "1–2 ч", 6],
+      ["Не работает камера", 59, 189, "40 мин", 6],
+      ["Попала вода", 49, 149, "1–2 дня", 3],
+      ["Не включается, плата", 79, 249, "1–3 дня", 3],
+      ["Не слышно собеседника", 39, 79, "30 мин", 6]
+    ]},
+  { id:"laptop", name:"Ноутбук", list:"Ноутбуки и MacBook", sub:"Матрица, клавиатура, чистка, ремонт платы, апгрейд", time:"от 2 ч", from:"от 49 €",
+    brands:[["MacBook",T.prem],["Lenovo",T.mid],["ASUS",T.mid],["HP",T.mid],["Dell",T.mid],["Другой",T.low]],
+    faults:[
+      ["Разбита матрица", 119, 349, "1–2 дня", 6],
+      ["Не работают клавиши", 79, 189, "1 день", 6],
+      ["Греется и шумит", 49, 79, "2–3 ч", 3],
+      ["Апгрейд SSD или RAM", 39, 39, "1 ч", 6, true],
+      ["Не заряжается", 69, 129, "1 день", 6],
+      ["Не включается, плата", 129, 389, "2–5 дней", 3],
+      ["Аккумулятор", 79, 169, "1 ч", 6],
+      ["Залит жидкостью", 89, 299, "2–4 дня", 3]
+    ]},
+  { id:"pc", name:"Компьютер", list:"Компьютеры", sub:"Диагностика, сборка, охлаждение, блок питания, Windows", time:"от 1 ч", from:"от 29 €",
+    brands:null,
+    faults:[
+      ["Не включается, диагностика", 0, 0, "30 мин", 0],
+      ["Сборка ПК из ваших деталей", 79, 129, "1 день", 6],
+      ["Замена блока питания", 29, 29, "1 ч", 6, true],
+      ["Шумит, перегревается", 49, 99, "2–3 ч", 3],
+      ["Переустановка Windows", 49, 69, "2 ч", 1],
+      ["Артефакты, видеокарта", 49, 199, "1–3 дня", 3]
+    ]},
+  { id:"tablet", name:"Планшет", list:"Планшеты", sub:"Стекло, дисплей, аккумулятор, разъём", time:"от 1 ч", from:"от 59 €",
+    brands:[["iPad",T.prem],["Samsung",T.mid],["Другой",T.low]],
+    faults:[
+      ["Разбито стекло или дисплей", 99, 349, "1–2 дня", 6],
+      ["Аккумулятор", 69, 129, "1–2 ч", 6],
+      ["Не заряжается, разъём", 59, 99, "1–2 ч", 6],
+      ["Не работают кнопки", 49, 89, "1 ч", 6]
+    ]},
+  { id:"console", name:"Консоль", list:"Игровые консоли", sub:"HDMI-порт, дрифт стиков, перегрев, чистка", time:"от 1 ч", from:"от 29 €",
+    brands:[["PlayStation",T.mid],["Xbox",T.mid],["Nintendo Switch",T.low]],
+    faults:[
+      ["Нет изображения, HDMI-порт", 89, 129, "1–2 дня", 6],
+      ["Дрифт стика у геймпада", 29, 49, "1 ч", 6],
+      ["Шумит и греется", 59, 89, "3 ч", 3],
+      ["Не читает диски", 69, 119, "1–2 дня", 6],
+      ["Разбит экран Switch", 89, 149, "1 день", 6]
+    ]},
+  { id:"wear", name:"Часы и наушники", list:"Часы и наушники", sub:"Стекло, аккумулятор, кейс наушников", time:"от 1 дня", from:"от 39 €",
+    brands:[["Apple",T.prem],["Samsung",T.mid],["Другие",T.low]],
+    faults:[
+      ["Разбито стекло часов", 79, 199, "1–2 дня", 6],
+      ["Аккумулятор часов", 59, 99, "1 день", 6],
+      ["Кейс наушников не заряжает", 39, 79, "1 день", 3]
+    ]},
+  { id:"data", name:"Данные", list:"Восстановление данных", sub:"HDD, SSD, флешки, карты памяти, телефоны", time:"от 2 дней", from:"от 99 €",
+    brands:null,
+    faults:[
+      ["Диск не определяется", 149, 449, "3–7 дней", 0],
+      ["Удалили файлы", 99, 249, "2–3 дня", 0],
+      ["Флешка или карта памяти", 99, 199, "2–4 дня", 0],
+      ["Данные с разбитого телефона", 149, 399, "3–7 дней", 0]
+    ]}
+];
+
+/* ================= SERVICES LIST ================= */
+const svcList = $("#svcList");
+svcList.innerHTML = CATS.map(c => `
+  <button class="svc-row" type="button" data-cat="${c.id}">
+    ${ICONS[c.id]}
+    <span><h3>${c.list}</h3><p>${c.sub}</p></span>
+    <span class="t">${c.time}</span>
+    <span class="p">${c.from}</span>
+    <span class="go" aria-hidden="true">→</span>
+  </button>`).join("");
+$$(".svc-row", svcList).forEach(b => b.addEventListener("click", () => {
+  calc.cat = b.dataset.cat; calc.brand = 0; calc.fault = 0; renderCalc(true);
+  $("#price").scrollIntoView({behavior: reduced ? "auto" : "smooth"});
+}));
+
+/* ================= CALCULATOR ================= */
+const calc = { cat:"phone", brand:0, fault:0, express:false };
+const eur = n => n.toLocaleString("de-DE") + " €";
+const r9 = x => x <= 0 ? 0 : x < 30 ? Math.round(x) : Math.round(x / 10) * 10 - 1;
+
+function quote(){
+  const c = CATS.find(x => x.id === calc.cat);
+  const f = c.faults[calc.fault];
+  let [name, min, max, time, warr, plusParts] = f;
+  let lo = min, hi = max;
+  if (c.brands && max > min){
+    const [a, b] = c.brands[calc.brand][1];
+    lo = min + (max - min) * a; hi = min + (max - min) * b;
+  }
+  if (calc.express){ lo *= 1.25; hi *= 1.25; }
+  lo = r9(lo); hi = r9(hi);
+  return { c, name, lo, hi, time: calc.express ? "вне очереди" : time, warr, plusParts };
+}
+
+function renderCalc(rebuild){
+  const c = CATS.find(x => x.id === calc.cat);
+  if (rebuild){
+    $("#catSeg").innerHTML = CATS.map(x => `<button type="button" data-id="${x.id}" aria-pressed="${x.id === calc.cat}">${x.name}</button>`).join("");
+    $$("#catSeg button").forEach(b => b.onclick = () => { calc.cat = b.dataset.id; calc.brand = 0; calc.fault = 0; renderCalc(true); });
+    const bs = $("#brandStep");
+    bs.hidden = !c.brands;
+    $("#faultStepN").textContent = c.brands ? "Шаг 3" : "Шаг 2";
+    if (c.brands){
+      $("#brandSeg").innerHTML = c.brands.map((b, i) => `<button type="button" data-i="${i}" aria-pressed="${i === calc.brand}">${b[0]}</button>`).join("");
+      $$("#brandSeg button").forEach(b => b.onclick = () => { calc.brand = +b.dataset.i; $$("#brandSeg button").forEach(x => x.setAttribute("aria-pressed", x === b)); renderQuote(); });
+    }
+    $("#faultList").innerHTML = c.faults.map((f, i) => `
+      <label for="ft${i}"><input type="radio" name="fault" id="ft${i}" value="${i}" ${i === calc.fault ? "checked" : ""}><span>${f[0]}</span><i class="box" aria-hidden="true"></i></label>`).join("");
+    $$("#faultList input").forEach(r => r.onchange = () => { calc.fault = +r.value; renderQuote(); });
+  }
+  renderQuote();
+}
+
+function renderQuote(){
+  const q = quote();
+  const brand = q.c.brands ? q.c.brands[calc.brand][0] + " · " : "";
+  $("#qWhat").textContent = `${q.c.name} · ${brand}${q.name}`;
+  const p = $("#qPrice");
+  p.innerHTML = q.hi === 0 ? "Бесплатно"
+    : q.lo === q.hi ? `${eur(q.lo)}${q.plusParts ? ' <small>+ деталь</small>' : ''}`
+    : `${q.lo}–${eur(q.hi)}`;
+  p.classList.remove("tick"); void p.offsetWidth; p.classList.add("tick");
+  $("#qTime").textContent = q.time;
+  $("#qWarr").textContent = q.warr ? `${q.warr} мес` : (q.c.id === "data" ? "Оплата за результат" : "—");
+  $("#qNote").textContent = q.c.id === "data"
+    ? "Не восстановили нужные файлы — ничего не платите."
+    : q.plusParts ? "Цена за работу. Деталь можно принести свою или купить у нас."
+    : "Цена включает работу и деталь. Разброс зависит от модели и класса детали.";
+}
+$("#express").addEventListener("change", e => { calc.express = e.target.checked; renderQuote(); });
+$("#qBook").addEventListener("click", () => {
+  const q = quote();
+  $("#fDevice").value = q.c.id;
+  const brand = q.c.brands ? q.c.brands[calc.brand][0] + ", " : "";
+  const price = q.hi === 0 ? "бесплатно" : q.lo === q.hi ? eur(q.lo) : `${q.lo}–${eur(q.hi)}`;
+  $("#fIssue").value = `${brand}${q.name.toLowerCase()}. Ориентир с сайта: ${price}${calc.express ? ", срочно" : ""}.`;
+});
+renderCalc(true);
+
+/* ================= STATUS TRACKER ================= */
+const STEPS = ["Принят", "Диагностика", "Согласование", "Ремонт", "Проверка", "Готов к выдаче"];
+const ORDERS = {
+  "HF-24817": { device:"iPhone 13", job:"Замена дисплея, OLED оригинал", step:3, master:"Арсен Т.", eta:"Сегодня до 17:00", upd:"сегодня, 14:12", note:"Дисплей установлен, идёт перенос True Tone и проверка Face ID." },
+  "HF-24833": { device:"PlayStation 5", job:"Замена HDMI-порта", step:2, master:"Арсен Т.", eta:"1 день после согласования", upd:"вчера, 18:05", note:"Ждём ваше подтверждение: 109 €, срок 1 рабочий день. Ответьте на SMS или позвоните." },
+  "HF-24790": { device:"MacBook Air M1", job:"Чистка, замена термопасты", step:5, master:"Вика С.", eta:"Можно забирать", upd:"сегодня, 11:40", note:"Готово. Под нагрузкой температура снизилась с 96 до 71 °C." }
+};
+function renderOrder(id){
+  const o = ORDERS[id];
+  $("#trackCard").innerHTML = `
+    <div class="t-top">
+      <div><span class="lbl">${o.step === 5 ? "Готово" : "В работе"}</span><h3>${o.device}</h3><p>${o.job}</p></div>
+      <div class="t-id">${id}<br><span class="lbl">обн. ${o.upd}</span></div>
+    </div>
+    <ol class="t-steps">${STEPS.map((s, i) => `
+      <li class="${i < o.step ? "done" : i === o.step ? "now" : ""}"><span class="mk"></span><span>${s}</span><span class="s">${i < o.step ? "Пройдено" : i === o.step ? "Сейчас" : ""}</span></li>`).join("")}
+    </ol>
+    <p class="t-note">${o.note}</p>
+    <div class="t-foot"><div><span class="lbl">Мастер</span><b>${o.master}</b></div><div><span class="lbl">Срок</span><b>${o.eta}</b></div></div>`;
+}
+function normId(v){
+  const d = String(v).replace(/\D/g, "");
+  return d ? "HF-" + d : "";
+}
+$("#trackForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const raw = $("#orderId").value.trim();
+  const id = normId(raw);
+  const err = $("#trackErr");
+  if (!id){ err.textContent = "Введите номер заказа из квитанции, например HF-24817."; return; }
+  if (!ORDERS[id]){ err.textContent = `Заказ ${id} не найден. Проверьте номер в квитанции или позвоните нам.`; return; }
+  err.textContent = ""; $("#orderId").value = id; renderOrder(id);
+});
+$$(".demo button").forEach(b => b.addEventListener("click", () => { $("#orderId").value = b.dataset.id; $("#trackForm").requestSubmit(); }));
+renderOrder("HF-24817");
+
+/* ================= MARQUEE ================= */
+const brands = ["iPhone", "Galaxy", "Pixel", "MacBook", "ThinkPad", "ZenBook", "PlayStation 5", "Xbox Series", "Switch", "iPad", "Apple Watch", "AirPods"];
+const g = '<svg class="glyph" aria-hidden="true"><use href="#g"/></svg>';
+const chunk = brands.map(b => `<span>${b}${g}</span>`).join("");
+$("#marq").innerHTML = chunk + chunk;
+
+/* ================= HOURS / OPEN STATE ================= */
+const HOURS = [ // 0 = Monday
+  ["Понедельник", 10, 19], ["Вторник", 10, 19], ["Среда", 10, 19], ["Четверг", 10, 19],
+  ["Пятница", 10, 19], ["Суббота", 11, 16], ["Воскресенье", null, null]
+];
+function berlinNow(){
+  try {
+    const parts = new Intl.DateTimeFormat("en-GB", { timeZone:"Europe/Berlin", weekday:"short", hour:"2-digit", minute:"2-digit", hour12:false }).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t).value;
+    const wd = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].indexOf(get("weekday"));
+    return { wd, h: +get("hour") % 24, m: +get("minute") };
+  } catch(e){ const d = new Date(); return { wd:(d.getDay() + 6) % 7, h:d.getHours(), m:d.getMinutes() }; }
+}
+function renderHours(){
+  const n = berlinNow();
+  $("#hoursBody").innerHTML = HOURS.map((h, i) => `<tr class="${i === n.wd ? "today" : ""}"><td>${h[0]}</td><td>${h[1] == null ? "выходной" : `${String(h[1]).padStart(2,"0")}:00–${h[2]}:00`}</td></tr>`).join("");
+  const today = HOURS[n.wd], t = n.h + n.m / 60;
+  const open = today[1] != null && t >= today[1] && t < today[2];
+  let msg;
+  if (open) msg = `<span class="dot"></span>Открыто · до ${today[2]}:00`;
+  else {
+    let k = 1, nx = HOURS[(n.wd + (today[1] != null && t < today[1] ? 0 : 1)) % 7];
+    if (today[1] != null && t < today[1]) msg = `<span class="dot closed"></span>Закрыто · откроемся в ${today[1]}:00`;
+    else {
+      while (HOURS[(n.wd + k) % 7][1] == null) k++;
+      nx = HOURS[(n.wd + k) % 7];
+      msg = `<span class="dot closed"></span>Закрыто · ${k === 1 ? "завтра" : nx[0].toLowerCase()} с ${nx[1]}:00`;
+    }
+  }
+  $("#openNow").innerHTML = msg;
+}
+renderHours(); setInterval(renderHours, 60000);
+
+/* ================= COPY ================= */
+$$(".copy").forEach(b => b.addEventListener("click", () => {
+  const txt = b.dataset.copy, label = b.textContent;
+  const done = ok => { b.textContent = ok ? "Скопировано" : "Выделено"; setTimeout(() => b.textContent = label, 1600); };
+  const fallback = () => { const dd = b.previousElementSibling; const r = document.createRange(); r.selectNodeContents(dd); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done(false); };
+  try { navigator.clipboard.writeText(txt).then(() => done(true), fallback); } catch(e){ fallback(); }
+}));
+
+/* ================= FORM ================= */
+$("#fDevice").innerHTML = '<option value="">Выберите</option>' + CATS.map(c => `<option value="${c.id}">${c.list}</option>`).join("");
+$("#bookForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target;
+  const rules = [
+    ["fName", v => v.trim().length >= 2, "Напишите имя, чтобы мастер знал, как к вам обращаться."],
+    ["fPhone", v => v.replace(/\D/g, "").length >= 7, "Нужен номер, на который можно перезвонить: минимум 7 цифр."],
+    ["fDevice", v => !!v, "Выберите тип устройства."],
+    ["fIssue", v => v.trim().length >= 6, "Опишите поломку хотя бы парой слов."]
+  ];
+  let first = null;
+  rules.forEach(([id, ok, msg]) => {
+    const el = $("#" + id), fld = el.closest(".field"), good = ok(el.value);
+    fld.classList.toggle("bad", !good);
+    fld.querySelector(".err").textContent = good ? "" : msg;
+    if (!good && !first) first = el;
+  });
+  if (first){ first.focus(); return; }
+  const num = "HF-" + (24840 + Math.floor(Math.random() * 90));
+  const name = $("#fName").value.trim().split(" ")[0];
+  $("#formWrap").innerHTML = `
+    <div class="done-panel">
+      <span class="lbl">[ Заявка принята ]</span>
+      <span class="big">${num}</span>
+      <p>${name}, спасибо. Перезвоним в течение 15 минут в рабочее время. Этот номер откроет статус ремонта, когда устройство будет у нас.</p>
+      <p class="mono" style="color:var(--mute-d)">Демо-режим: заявка нигде не сохраняется</p>
+    </div>`;
+});
+$$("#bookForm input, #bookForm textarea, #bookForm select").forEach(el => el.addEventListener("input", () => {
+  const fld = el.closest(".field"); if (fld.classList.contains("bad")){ fld.classList.remove("bad"); fld.querySelector(".err").textContent = ""; }
+}));
+
+/* ================= MENU ================= */
+const sheet = $("#sheet");
+const setMenu = open => { sheet.classList.toggle("open", open); sheet.setAttribute("aria-hidden", !open); $("#menuOpen").setAttribute("aria-expanded", open); document.body.style.overflow = open ? "hidden" : ""; };
+$("#menuOpen").onclick = () => setMenu(true);
+$("#menuClose").onclick = () => setMenu(false);
+$$("#sheet nav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+
+/* ================= 3D ================= */
+if (!window.THREE) return;
+function glOK(){ try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch(e){ return false; } }
+if (!glOK()) return;
+
+function rrect(w, h, r){
+  const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+function slab(w, h, d, r, mat, bev = 0.015){
+  const g = new THREE.ExtrudeGeometry(rrect(w, h, r), { depth:d, bevelEnabled:true, bevelThickness:bev, bevelSize:bev, bevelSegments:3, curveSegments:14 });
+  g.translate(0, 0, -d / 2); g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+}
+function ring(w, h, r, t, d, mat){
+  const s = rrect(w, h, r); s.holes.push(rrect(w - t * 2, h - t * 2, Math.max(0.02, r - t)));
+  const g = new THREE.ExtrudeGeometry(s, { depth:d, bevelEnabled:true, bevelThickness:0.012, bevelSize:0.012, bevelSegments:3, curveSegments:18 });
+  g.translate(0, 0, -d / 2); g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+}
+function cyl(r, h, mat, seg = 32){ const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, seg), mat); m.rotation.x = Math.PI / 2; return m; }
+function canvasTex(w, h, draw){
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  draw(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t;
+}
+function rr(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function glyphPath(ctx, x, y, s){
+  const p = new Path2D("M22 0H78L100 22V78L78 100H22L0 78V22ZM41 17H59V41H83V59H59V83H41V59H17V41H41Z");
+  ctx.save(); ctx.translate(x, y); ctx.scale(s / 100, s / 100); ctx.fill(p, "evenodd"); ctx.restore();
+}
+
+function materials(){
+  return {
+    chrome: new THREE.MeshStandardMaterial({ color:0xd8d8d8, metalness:1, roughness:0.16 }),
+    steel:  new THREE.MeshStandardMaterial({ color:0x9a9a9a, metalness:1, roughness:0.32 }),
+    dark:   new THREE.MeshStandardMaterial({ color:0x2a2a2a, metalness:0.85, roughness:0.38 }),
+    matte:  new THREE.MeshStandardMaterial({ color:0x1b1b1b, metalness:0.1, roughness:0.72 }),
+    board:  new THREE.MeshStandardMaterial({ color:0x151515, metalness:0.45, roughness:0.5 }),
+    glass:  new THREE.MeshPhysicalMaterial({ color:0x0a0a0a, metalness:0, roughness:0.06, clearcoat:1, clearcoatRoughness:0.04, envMapIntensity:1.6 }),
+    clear:  new THREE.MeshPhysicalMaterial({ color:0xffffff, metalness:0, roughness:0.02, transparent:true, opacity:0.16, clearcoat:1, clearcoatRoughness:0.02, envMapIntensity:2.2, depthWrite:false }),
+    alu:    new THREE.MeshStandardMaterial({ color:0x8c8c8c, metalness:0.95, roughness:0.34 }),
+    aluD:   new THREE.MeshStandardMaterial({ color:0x4a4a4a, metalness:0.9, roughness:0.4 }),
+    keys:   new THREE.MeshStandardMaterial({ color:0x161616, metalness:0.2, roughness:0.6 })
+  };
+}
+
+function envFor(renderer){
+  const s = new THREE.Scene();
+  s.add(new THREE.Mesh(new THREE.BoxGeometry(24, 24, 24), new THREE.MeshBasicMaterial({ color:0x121212, side:THREE.BackSide })));
+  const panel = (w, h, x, y, z, k) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color:new THREE.Color(k, k, k), side:THREE.DoubleSide }));
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); s.add(m);
+  };
+  panel(14, 4, 0, 10, 2, 5);
+  panel(3, 12, -10, 1, 3, 3.2);
+  panel(2, 12, 10, 0, -3, 2.2);
+  panel(12, 1.5, 0, -3, 10, 1.3);
+  panel(4, 4, 6, 6, 8, 2.4);
+  const pm = new THREE.PMREMGenerator(renderer);
+  const tex = pm.fromScene(s, 0.03).texture; pm.dispose();
+  return tex;
+}
+
+function stage(canvas, host, build, camZ, fov){
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:"high-performance" }); }
+  catch(e){ return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene();
+  scene.environment = envFor(renderer);
+  const camera = new THREE.PerspectiveCamera(fov, 1, 0.1, 100);
+  camera.position.set(0, 0, camZ);
+  const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(4, 6, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 1.1); rim.position.set(-7, 3, -5); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+  const M = materials();
+  const api = build(scene, M);
+
+  const ptr = { x:0, y:0, tx:0, ty:0, over:0 };
+  host.addEventListener("pointermove", e => {
+    const r = host.getBoundingClientRect();
+    ptr.tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    ptr.ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+    ptr.over = 1;
+  }, { passive:true });
+  host.addEventListener("pointerleave", () => { ptr.tx = 0; ptr.ty = 0; ptr.over = 0; });
+
+  let prog = 0;
+  const measure = () => { const r = host.getBoundingClientRect(); const vh = innerHeight; prog = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))); };
+  addEventListener("scroll", measure, { passive:true }); measure();
+
+  function resize(){
+    const r = canvas.getBoundingClientRect(); const w = Math.max(1, r.width), h = Math.max(1, r.height);
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    api.fit && api.fit(w / h);
+    if (reduced) frame(0.016);
+  }
+  let t = 0, last = performance.now(), visible = true, raf = 0;
+  function frame(dt){
+    t += dt;
+    ptr.x += (ptr.tx - ptr.x) * Math.min(1, dt * 3.2);
+    ptr.y += (ptr.ty - ptr.y) * Math.min(1, dt * 3.2);
+    api.update(reduced ? 2 : t, dt, ptr, prog);
+    renderer.render(scene, camera);
+  }
+  function loop(){
+    raf = 0; if (!visible) return;
+    const now = performance.now(); const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    frame(dt);
+    raf = requestAnimationFrame(loop);
+  }
+  new ResizeObserver(resize).observe(canvas); resize();
+  if (reduced){ api.settle && api.settle(); frame(0.016); return; }
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && !raf){ last = performance.now(); loop(); } }, { rootMargin:"120px" }).observe(canvas);
+  loop();
+}
+
+/* ---------- Phone teardown ---------- */
+function buildPhone(scene, M){
+  const root = new THREE.Group(); scene.add(root);
+  const tilt = new THREE.Group(); root.add(tilt);
+  tilt.rotation.set(0.36, -0.72, 0.22);
+  const W = 1.5, H = 3.1, R = 0.24;
+  const layers = [];
+  const add = (o, lvl) => { tilt.add(o); layers.push({ o, lvl, z:o.position.z }); return o; };
+
+  // back glass + camera bump
+  const back = new THREE.Group();
+  back.add(slab(W, H, 0.05, R, M.glass, 0.016));
+  const bump = slab(0.68, 0.68, 0.05, 0.17, M.glass, 0.012); bump.position.set(-0.33, 1.08, -0.07); back.add(bump);
+  [[-0.47, 1.22], [-0.19, 0.94]].forEach(([x, y]) => {
+    const rg = cyl(0.115, 0.06, M.chrome); rg.position.set(x, y, -0.11); back.add(rg);
+    const ln = cyl(0.082, 0.065, M.glass); ln.position.set(x, y, -0.115); back.add(ln);
+  });
+  const fl = cyl(0.04, 0.04, M.steel); fl.position.set(-0.19, 1.22, -0.1); back.add(fl);
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), new THREE.MeshStandardMaterial({ map:canvasTex(128, 128, (c, w) => { c.fillStyle = "#bdbdbd"; glyphPath(c, 0, 0, w); }), transparent:true, metalness:1, roughness:0.2 }));
+  logo.position.set(0, -0.1, -0.043); logo.rotation.y = Math.PI; back.add(logo);
+  add(back, -3);
+
+  // camera module
+  const cam = new THREE.Group();
+  cam.add(slab(0.6, 0.6, 0.12, 0.08, M.dark, 0.01));
+  [[-0.14, 0.14], [0.14, -0.14]].forEach(([x, y]) => { const b = cyl(0.105, 0.2, M.chrome); b.position.set(x, y, -0.04); cam.add(b); const e = cyl(0.07, 0.205, M.glass); e.position.set(x, y, -0.04); cam.add(e); });
+  const flex = slab(0.12, 0.5, 0.01, 0.02, M.board, 0.004); flex.position.set(0.28, -0.36, 0); cam.add(flex);
+  cam.position.set(-0.33, 1.08, 0);
+  add(cam, -2.2);
+
+  // battery
+  const bat = new THREE.Group();
+  bat.add(slab(1.12, 1.78, 0.09, 0.05, M.matte, 0.01));
+  const lab = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.62), new THREE.MeshStandardMaterial({ map:canvasTex(256, 416, (c, w, h) => {
+    c.fillStyle = "#202020"; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#9a9a9a"; c.font = "500 22px JetBrains Mono, monospace"; c.fillText("Li-ion", 22, 52);
+    c.font = "400 15px JetBrains Mono, monospace"; ["3.88 V", "3227 mAh", "12.41 Wh"].forEach((s, i) => c.fillText(s, 22, 92 + i * 26));
+    c.fillStyle = "#3a3a3a"; for (let i = 0; i < 30; i++) c.fillRect(22 + i * 6.8, h - 70, i % 3 ? 2 : 4, 40);
+    c.fillStyle = "#7a7a7a"; glyphPath(c, w - 64, 24, 40);
+  }), roughness:0.8 }));
+  lab.position.z = 0.06; bat.add(lab);
+  bat.position.set(0.04, -0.4, 0);
+  add(bat, -1.35);
+
+  // logic board
+  const brd = new THREE.Group();
+  brd.add(slab(1.24, 1.02, 0.03, 0.06, M.board, 0.005));
+  const sh1 = slab(0.5, 0.36, 0.05, 0.02, M.chrome, 0.006); sh1.position.set(0.24, 0.18, 0.04); brd.add(sh1);
+  const sh2 = slab(0.36, 0.3, 0.05, 0.02, M.steel, 0.006); sh2.position.set(0.3, -0.22, 0.04); brd.add(sh2);
+  const soc = slab(0.26, 0.26, 0.04, 0.01, M.dark, 0.004); soc.position.set(-0.24, 0.1, 0.035); brd.add(soc);
+  const capG = new THREE.BoxGeometry(0.035, 0.02, 0.02);
+  const caps = new THREE.InstancedMesh(capG, M.steel, 46); const dm = new THREE.Object3D();
+  for (let i = 0; i < 46; i++){ dm.position.set(-0.55 + Math.random() * 0.5, -0.45 + Math.random() * 0.85, 0.028); dm.rotation.z = Math.random() < 0.5 ? 0 : Math.PI / 2; dm.updateMatrix(); caps.setMatrixAt(i, dm.matrix); }
+  brd.add(caps);
+  brd.position.set(0.06, 0.94, 0);
+  add(brd, -0.75);
+
+  // midframe
+  const frame = new THREE.Group();
+  frame.add(ring(W + 0.03, H + 0.03, R + 0.015, 0.075, 0.18, M.chrome));
+  [[0.5, 0.18], [0.85, 0.3]].forEach(([y, h]) => { const b = slab(0.04, h, 0.05, 0.015, M.chrome, 0.008); b.position.set(-W / 2 - 0.04, y, 0); frame.add(b); });
+  const pb = slab(0.04, 0.42, 0.05, 0.015, M.chrome, 0.008); pb.position.set(W / 2 + 0.04, 0.62, 0); frame.add(pb);
+  add(frame, 0);
+
+  // display
+  const disp = new THREE.Group();
+  disp.add(slab(W - 0.08, H - 0.08, 0.035, R - 0.04, M.matte, 0.006));
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.14, H - 0.14), new THREE.MeshStandardMaterial({
+    map:canvasTex(300, 620, (c, w, h) => {
+      const r = 38;
+      c.save(); rr(c, 0, 0, w, h, r); c.clip();
+      const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, "#3a3a3a"); gr.addColorStop(.55, "#121212"); gr.addColorStop(1, "#050505");
+      c.fillStyle = gr; c.fillRect(0, 0, w, h);
+      c.strokeStyle = "rgba(255,255,255,.06)"; for (let y = 0; y < h; y += 6){ c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+      c.fillStyle = "#e9e9e9"; c.font = "300 64px Onest, Arial"; c.fillText("10:42", 28, 120);
+      c.font = "500 13px JetBrains Mono, monospace"; c.fillStyle = "#9a9a9a"; c.fillText("ДИАГНОСТИКА ОК", 30, 150);
+      c.fillStyle = "rgba(255,255,255,.85)"; glyphPath(c, w / 2 - 56, h * 0.48, 112);
+      c.fillStyle = "#000"; rr(c, w / 2 - 50, 16, 100, 26, 13); c.fill();
+      c.restore();
+    }), emissive:0xffffff, roughness:0.35, transparent:true
+  }));
+  scr.material.emissiveMap = scr.material.map; scr.material.emissiveIntensity = 0.55;
+  scr.position.z = 0.03; disp.add(scr);
+  add(disp, 1.15);
+
+  // front glass
+  add(slab(W, H, 0.025, R, M.clear, 0.012), 2.05);
+
+  // screws
+  const screws = [];
+  const sHead = new THREE.CylinderGeometry(0.04, 0.04, 0.022, 20), sShaft = new THREE.CylinderGeometry(0.015, 0.015, 0.09, 12);
+  for (let i = 0; i < 9; i++){
+    const s = new THREE.Group();
+    const hd = new THREE.Mesh(sHead, M.chrome); hd.position.y = 0.045; s.add(hd);
+    s.add(new THREE.Mesh(sShaft, M.steel));
+    const a = (i / 9) * Math.PI * 2 + 0.4;
+    const base = new THREE.Vector3(Math.cos(a) * (1.25 + (i % 3) * 0.28), Math.sin(a) * (1.9 + (i % 2) * 0.3), (i % 3 - 1) * 0.6);
+    s.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+    tilt.add(s); screws.push({ s, base, sp:0.3 + Math.random() * 0.6, ph:Math.random() * 6 });
+  }
+
+  let E = 0.35, s0 = 1;
+  return {
+    fit(a){ s0 = a < 0.75 ? 0.82 : a < 1.1 ? 0.92 : 1; root.position.x = a > 1.4 ? 0.35 : 0; },
+    settle(){ E = 1; },
+    update(t, dt, p, prog){
+      const target = reduced ? 1 : 0.75 + Math.sin(t * 0.55) * 0.18 + prog * 0.9 + p.over * 0.25;
+      E += (target - E) * Math.min(1, dt * 2.4);
+      layers.forEach(l => { l.o.position.z = l.z + l.lvl * E * 0.42; });
+      screws.forEach(k => {
+        k.s.position.copy(k.base).multiplyScalar(0.55 + E * 0.5);
+        k.s.position.y += Math.sin(t * k.sp + k.ph) * 0.06;
+        k.s.rotation.x += dt * k.sp * 0.6; k.s.rotation.z += dt * k.sp * 0.4;
+      });
+      root.rotation.y = p.x * 0.38 + Math.sin(t * 0.3) * 0.12;
+      root.rotation.x = p.y * 0.22;
+      root.position.y = Math.sin(t * 0.8) * 0.05;
+      root.scale.setScalar(s0);
+    }
+  };
+}
+
+/* ---------- Laptop teardown ---------- */
+function buildLaptop(scene, M){
+  const root = new THREE.Group(); scene.add(root);
+  const tilt = new THREE.Group(); root.add(tilt);
+  tilt.rotation.set(0.5, 0.62, 0);
+  const W = 3.3, D = 2.2;
+  const flat = o => { o.rotation.x = -Math.PI / 2; return o; };
+  const layers = [];
+  const add = (o, lvl) => { tilt.add(o); layers.push({ o, lvl, y:o.position.y }); return o; };
+
+  add(flat(slab(W, D, 0.04, 0.14, M.aluD, 0.012)), -2.6);
+
+  const bat = new THREE.Group();
+  [-1, 0, 1].forEach(i => { const c = flat(slab(0.95, 0.72, 0.08, 0.04, M.matte, 0.01)); c.position.set(i * 1.0, 0, 0.5); bat.add(c); });
+  add(bat, -1.7);
+
+  const mb = new THREE.Group();
+  const pl = flat(slab(2.3, 0.95, 0.03, 0.05, M.board, 0.005)); pl.position.set(-0.2, 0, -0.45); mb.add(pl);
+  const cpu = flat(slab(0.34, 0.34, 0.05, 0.02, M.chrome, 0.005)); cpu.position.set(-0.4, 0.04, -0.45); mb.add(cpu);
+  const ram = flat(slab(0.7, 0.22, 0.04, 0.01, M.steel, 0.004)); ram.position.set(-1.0, 0.035, -0.5); mb.add(ram);
+  const pipe = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.03, 0.08), M.chrome); pipe.position.set(0.15, 0.07, -0.45); mb.add(pipe);
+  const fan = new THREE.Group(); fan.position.set(0.85, 0.04, -0.45);
+  const house = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.07, 40, 1, true), M.dark); fan.add(house);
+  const blades = new THREE.Group();
+  for (let i = 0; i < 11; i++){ const b = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.05, 0.035), M.steel); const a = i / 11 * Math.PI * 2; b.position.set(Math.cos(a) * 0.17, 0, Math.sin(a) * 0.17); b.rotation.y = -a + 0.5; blades.add(b); }
+  blades.add(new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.07, 24), M.chrome));
+  fan.add(blades); mb.add(fan);
+  add(mb, -0.85);
+
+  const deck = new THREE.Group();
+  deck.add(flat(slab(W, D, 0.09, 0.14, M.alu, 0.014)));
+  const cols = 14, rows = 6, kw = 0.17, gap = 0.032;
+  const keys = new THREE.InstancedMesh(new THREE.BoxGeometry(kw, 0.03, kw * 0.92), M.keys, cols * rows);
+  const dm = new THREE.Object3D(); let k = 0;
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++){
+    dm.position.set((c - (cols - 1) / 2) * (kw + gap), 0.07, -0.85 + r * (kw * 0.92 + gap)); dm.updateMatrix(); keys.setMatrixAt(k++, dm.matrix);
+  }
+  deck.add(keys);
+  const space = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.03, kw * 0.92), M.keys); space.position.set(0, 0.07, -0.85 + rows * (kw * 0.92 + gap)); deck.add(space);
+  const pad = flat(slab(1.15, 0.62, 0.006, 0.04, M.aluD, 0.003)); pad.position.set(0, 0.058, 0.68); deck.add(pad);
+  add(deck, 0);
+
+  const lidP = new THREE.Group(); lidP.position.set(0, 0.07, -D / 2);
+  const lid = flat(slab(W, D, 0.05, 0.14, M.alu, 0.012)); lid.position.set(0, 0.03, D / 2); lidP.add(lid);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.24, D - 0.26), new THREE.MeshStandardMaterial({
+    map:canvasTex(512, 340, (c, w, h) => {
+      const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, "#2e2e2e"); gr.addColorStop(1, "#060606"); c.fillStyle = gr; c.fillRect(0, 0, w, h);
+      c.strokeStyle = "rgba(255,255,255,.08)"; for (let x = 0; x < w; x += 32){ c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); } for (let y = 0; y < h; y += 32){ c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+      c.fillStyle = "#e6e6e6"; glyphPath(c, 36, 36, 58);
+      c.font = "500 15px JetBrains Mono, monospace"; c.fillStyle = "#bdbdbd";
+      ["SMART ......... OK", "TEMP CPU ...... 71°C", "FAN ........... 2 340 RPM", "BATTERY ....... 88%"].forEach((s, i) => c.fillText(s, 36, 150 + i * 30));
+    }), emissive:0xffffff, roughness:0.3
+  }));
+  scr.material.emissiveMap = scr.material.map; scr.material.emissiveIntensity = 0.5;
+  scr.rotation.x = Math.PI / 2; scr.position.set(0, -0.016, D / 2); lidP.add(scr);
+  lidP.rotation.x = -1.86;
+  add(lidP, 0.9);
+
+  let E = 0.4, s0 = 1, yOff = -0.25;
+  return {
+    fit(a){ s0 = Math.max(0.55, Math.min(1, a / 1.45)); yOff = a < 1.3 ? -0.6 : -0.25; },
+    settle(){ E = 1; },
+    update(t, dt, p, prog){
+      const target = reduced ? 1 : 0.55 + Math.sin(t * 0.5 + 1) * 0.15 + Math.min(1, prog * 1.6) * 0.65 + p.over * 0.2;
+      E += (target - E) * Math.min(1, dt * 2.2);
+      layers.forEach(l => { l.o.position.y = l.y + l.lvl * E * 0.42; });
+      lidP.position.z = -D / 2 - E * 0.25;
+      blades.rotation.y -= dt * (4 + E * 6);
+      root.rotation.y = p.x * 0.3 + Math.sin(t * 0.25) * 0.1;
+      root.rotation.x = p.y * 0.12;
+      root.position.y = yOff + Math.sin(t * 0.7) * 0.04;
+      root.scale.setScalar(s0);
+    }
+  };
+}
+
+const startPhone = () => stage($("#phone3d"), $(".hero"), buildPhone, 10.5, 30);
+const startLaptop = () => stage($("#laptop3d"), $("#briefStage"), buildLaptop, 8.6, 30);
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { startPhone(); startLaptop(); });
+})();
+</script>
+</body>
+</html>
